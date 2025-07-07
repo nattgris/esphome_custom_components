@@ -17,4 +17,5 @@ external_components:
 
 includes;
 
-* ifan - provides simple support for the fan, buzzer, and light of an sonoff ifan04, cloned from [Christopher P. Yarger's custom_components repo](https://github.com/cpyarger/custom_components).
+* [automower_g3](components/automower_g3) - Local control of Husqvarna Gen 3 Automowers
+* [ifan](components/ifan) - provides simple support for the fan, buzzer, and light of an sonoff ifan04, cloned from [Christopher P. Yarger's custom_components repo](https://github.com/cpyarger/custom_components).
