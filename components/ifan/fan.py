@@ -19,18 +19,25 @@ ifan_ns = cg.esphome_ns.namespace("ifan")
 IFan = ifan_ns.class_("IFan", cg.Component, fan.Fan, uart.UARTDevice)
 CycleSpeedAction = ifan_ns.class_("CycleSpeedAction", automation.Action)
 
-CONFIG_SCHEMA = fan.FAN_SCHEMA.extend(
-    {
-        cv.GenerateID(CONF_OUTPUT_ID): cv.declare_id(IFan),
-        cv.Optional(BUZZER_ENABLE, default=True): cv.boolean,
-        cv.Optional(REMOTE_ENABLE, default=True): cv.boolean,
-    }
-).extend(cv.COMPONENT_SCHEMA).extend(uart.UART_DEVICE_SCHEMA)
+CONFIG_SCHEMA = (
+    fan.fan_schema(IFan)
+    .extend(
+        {
+            cv.GenerateID(CONF_OUTPUT_ID): cv.declare_id(IFan),
+            cv.Optional(BUZZER_ENABLE, default=True): cv.boolean,
+            cv.Optional(REMOTE_ENABLE, default=True): cv.boolean,
+        }
+    )
+    .extend(cv.COMPONENT_SCHEMA)
+    .extend(uart.UART_DEVICE_SCHEMA)
+)
+
 FAN_ACTION_SCHEMA = maybe_simple_id(
     {
         cv.Required(CONF_ID): cv.use_id(IFan),
     }
 )
+
 @automation.register_action("ifan.cycle_speed", CycleSpeedAction, FAN_ACTION_SCHEMA)
 async def fan_cycle_speed_to_code(config, action_id, template_arg, args):
     paren = await cg.get_variable(config[CONF_ID])
@@ -50,5 +57,4 @@ async def to_code(config):
 
     await fan.register_fan(var, config)
 
-    
     cg.add_global(ifan_ns.using)
