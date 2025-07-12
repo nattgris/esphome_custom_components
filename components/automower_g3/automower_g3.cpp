@@ -1,6 +1,7 @@
 #include "automower_g3.h"
 #include "esphome/core/log.h"
 #include "esphome/core/helpers.h"
+#include <string>
 
 namespace esphome {
 namespace automower {
@@ -77,6 +78,13 @@ static void publish(sensor::Sensor *sensor, float value)
   }
 }
 
+static void publish(text_sensor::TextSensor *sensor, const std::string &value)
+{
+  if (sensor != nullptr) {
+    sensor->publish_state(value);
+  }
+}
+
 void AutoMower::set_mode(enum AutoMowerMode mode)
 {
   mode_request = mode;
@@ -121,7 +129,14 @@ bool AutoMower::parse_automower_byte_(uint8_t byte) {
 
   if (command == 0x13 && data_len >= 0x17) {
     auto next_start = get_uint32(raw, 10);
-    publish(status_sensor_, raw[4]);
+    auto status = raw[4];
+    auto search = STATUS_INT_TO_TEXT.find(status);
+    if (search != STATUS_INT_TO_TEXT.end()) {
+      publish(status_text_sensor_, search->second);
+    } else {
+      publish(status_text_sensor_, std::to_string(status));
+      ESP_LOGD(TAG, "Unknown mower state %u", status);
+    }
     publish(mode_sensor_, raw[6]);
     publish(substatus_sensor_, get_uint16(raw, 7));
     publish(next_start_sensor_, next_start > 0 ? next_start : NAN);
@@ -185,7 +200,6 @@ void AutoMower::dump_config() {
 #endif
 #ifdef USE_SENSOR
   LOG_SENSOR("  ", "ModeSensor", this->mode_sensor_);
-  LOG_SENSOR("  ", "StatusSensor", this->status_sensor_);
   LOG_SENSOR("  ", "SubstatusSensor", this->substatus_sensor_);
   LOG_SENSOR("  ", "NextStartSensor", this->next_start_sensor_);
   LOG_SENSOR("  ", "NumSatSensor", this->num_sat_sensor_);
@@ -200,6 +214,9 @@ void AutoMower::dump_config() {
   LOG_SENSOR("  ", "Battery2Level", this->battery_2_level_sensor_);
   LOG_SENSOR("  ", "Battery2Current", this->battery_2_current_sensor_);
   LOG_SENSOR("  ", "Battery2Temperature", this->battery_2_temperature_sensor_);
+#endif
+#ifdef USE_TEXT_SENSOR
+  LOG_TEXT_SENSOR("  ", "StatusSensor", this->status_text_sensor_);
 #endif
 }
 float AutoMower::get_setup_priority() const {

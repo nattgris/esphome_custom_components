@@ -11,6 +11,9 @@
 #ifdef USE_SENSOR
 #include "esphome/components/sensor/sensor.h"
 #endif
+#ifdef USE_TEXT_SENSOR
+#include "esphome/components/text_sensor/text_sensor.h"
+#endif
 #include "esphome/components/uart/uart.h"
 #include "esphome/core/defines.h"
 
@@ -54,7 +57,6 @@ class AutoMower : public uart::UARTDevice, public Component {
   SUB_BUTTON(man)
 #endif
 #ifdef USE_SENSOR
-  SUB_SENSOR(status)
   SUB_SENSOR(substatus)
   SUB_SENSOR(mode)
   SUB_SENSOR(next_start)
@@ -70,6 +72,9 @@ class AutoMower : public uart::UARTDevice, public Component {
   SUB_SENSOR(battery_2_level)
   SUB_SENSOR(battery_2_current)
   SUB_SENSOR(battery_2_temperature)
+#endif
+#ifdef USE_SENSOR
+  SUB_TEXT_SENSOR(status)
 #endif
 
  public:

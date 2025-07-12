@@ -47,8 +47,6 @@ CONFIG_SCHEMA = cv.Schema(
             device_class=DEVICE_CLASS_TIMESTAMP,
             state_class=STATE_CLASS_MEASUREMENT,
         ),
-        cv.Optional("status"): sensor.sensor_schema(
-        ),
         cv.Optional("substatus"): sensor.sensor_schema(
         ),
         cv.Optional("mode"): sensor.sensor_schema(
