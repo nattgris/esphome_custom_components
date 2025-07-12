@@ -33,10 +33,11 @@ void AutoMower::loop() {
     }
   }
 
-  if (now - this->last_send_ > 2000) {
+  if (waiting_for_response == 0 && now - this->last_send_ > 2000) {
     if (mode_request != 0) {
       this->send(0x0E, { mode_request });
       mode_request = 0;
+      poll_state = 0;
     } else switch (poll_state++) {
     case 0:
       this->send(0x12, { 0x01 });
