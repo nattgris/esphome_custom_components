@@ -56,6 +56,7 @@ class AutoMower : public uart::UARTDevice, public Component {
 #ifdef USE_SENSOR
   SUB_SENSOR(status)
   SUB_SENSOR(substatus)
+  SUB_SENSOR(mode)
   SUB_SENSOR(next_start)
   SUB_SENSOR(num_sat)
   SUB_SENSOR(latitude)

@@ -51,6 +51,8 @@ CONFIG_SCHEMA = cv.Schema(
         ),
         cv.Optional("substatus"): sensor.sensor_schema(
         ),
+        cv.Optional("mode"): sensor.sensor_schema(
+        ),
         cv.Optional("num_sat"): sensor.sensor_schema(
             state_class=STATE_CLASS_MEASUREMENT,
         ),

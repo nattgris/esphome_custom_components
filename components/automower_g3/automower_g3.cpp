@@ -122,6 +122,7 @@ bool AutoMower::parse_automower_byte_(uint8_t byte) {
   if (command == 0x13 && data_len >= 0x17) {
     auto next_start = get_uint32(raw, 10);
     publish(status_sensor_, raw[4]);
+    publish(mode_sensor_, raw[6]);
     publish(substatus_sensor_, get_uint16(raw, 7));
     publish(next_start_sensor_, next_start > 0 ? next_start : NAN);
     uint32_t current_time = get_uint32(raw, 15);
@@ -183,6 +184,7 @@ void AutoMower::dump_config() {
   LOG_BUTTON("  ", "ManButton", this->man_button_);
 #endif
 #ifdef USE_SENSOR
+  LOG_SENSOR("  ", "ModeSensor", this->mode_sensor_);
   LOG_SENSOR("  ", "StatusSensor", this->status_sensor_);
   LOG_SENSOR("  ", "SubstatusSensor", this->substatus_sensor_);
   LOG_SENSOR("  ", "NextStartSensor", this->next_start_sensor_);
