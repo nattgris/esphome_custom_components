@@ -28,16 +28,21 @@ enum AutoMowerMode {
 
 enum AutoMowerStatus {
   STATUS_PARKING = 0x01,
-  STATUS_CHARGING = 0x04,
   STATUS_MOWING = 0x02,
+  STATUS_RETURNING = 0x03,
+  STATUS_CHARGING = 0x04,
   STATUS_SEARCHING = 0x05,
   STATUS_ERROR = 0x07,
 };
 
-static const std::map<std::string, uint8_t> STATUS_ENUM_TO_INT{
-    {"parking", STATUS_PARKING}, {"charging", STATUS_CHARGING}, {"mowing", STATUS_MOWING}, {"STATUS_searching", STATUS_SEARCHING}, {"STATUS_error", STATUS_ERROR}};
-static const std::map<uint8_t, std::string> STATUS_INT_TO_ENUM{
-    {STATUS_PARKING, "parking"}, {STATUS_CHARGING, "charging"}, {STATUS_MOWING, "mowing"}, {STATUS_SEARCHING, "STATUS_searching"}, {STATUS_ERROR, "STATUS_error"}};
+static const std::map<uint8_t, std::string> STATUS_INT_TO_TEXT {
+  {STATUS_PARKING, "docked"},
+  {STATUS_MOWING, "mowing"},
+  {STATUS_RETURNING, "returning"},
+  {STATUS_CHARGING, "charging"},
+  {STATUS_SEARCHING, "searching"},
+  {STATUS_ERROR, "error"}
+};
 
 class AutoMower : public uart::UARTDevice, public Component {
 #ifdef USE_BINARY_SENSOR
