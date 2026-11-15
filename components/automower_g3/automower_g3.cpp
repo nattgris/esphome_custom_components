@@ -230,7 +230,7 @@ void AutoMower::send(uint8_t command, const std::vector<uint8_t> &payload) {
     return;
   }
 
-  if (command & 1 != 0) {
+  if ((command & 1) != 0) {
     ESP_LOGE(TAG, "Cannot send response as command: 0x%02x", command);
   }
   std::vector<uint8_t> data;
