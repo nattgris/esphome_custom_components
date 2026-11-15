@@ -5,7 +5,6 @@ from esphome.const import (
     CONF_ID,
     CONF_UART_ID,
     CONF_PIN,
-    CONF_DISABLE_CRC,
     CONF_BATTERY_VOLTAGE,
     DEVICE_CLASS_VOLTAGE,
     STATE_CLASS_MEASUREMENT,
@@ -24,6 +23,7 @@ AutoMower = am_ns.class_("AutoMower", cg.Component, uart.UARTDevice)
 
 CONF_AUTOMOWER_ID = "automower_g3_id"
 CONF_TIMEOUT = "timeout"
+CONF_DISABLE_CRC = "disable_crc"
 
 CONFIG_SCHEMA = (
     cv.Schema(
