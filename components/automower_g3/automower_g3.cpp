@@ -94,6 +94,7 @@ bool AutoMower::parse_automower_byte_(uint8_t byte) {
   size_t at = this->rx_buffer_.size();
   this->rx_buffer_.push_back(byte);
   const uint8_t *raw = &this->rx_buffer_[0];
+  char buf[format_hex_pretty_size(255)];
   //ESP_LOGV(TAG, "RX[%zu] 0x%02x", at, byte);
   // Byte 0: STX, otherwise restart until it is
   if (at == 0 && byte != STX)
@@ -125,7 +126,7 @@ bool AutoMower::parse_automower_byte_(uint8_t byte) {
   }
   waiting_for_response = 0;
 
-  ESP_LOGV(TAG, "AutoMower got frame: %s", format_hex_pretty(this->rx_buffer_).c_str());
+  ESP_LOGV(TAG, "AutoMower got frame: %s", format_hex_pretty_to(buf, this->rx_buffer_));
 
   if (command == 0x13 && data_len >= 0x17) {
     auto next_start = get_uint32(raw, 10);
@@ -178,7 +179,7 @@ bool AutoMower::parse_automower_byte_(uint8_t byte) {
   } else if (command == 0x0E && data_len == 1) {
     ESP_LOGI(TAG, "Set Mode: 0x%02x", (unsigned)raw[3]);
   } else if (command == 0x06) {
-    ESP_LOGD(TAG, "AutoMower got frame: %s", format_hex_pretty(this->rx_buffer_).c_str());
+    ESP_LOGD(TAG, "AutoMower got frame: %s", format_hex_pretty_to(buf, this->rx_buffer_));
   }
 
 
@@ -251,7 +252,8 @@ void AutoMower::send(uint8_t command, const std::vector<uint8_t> &payload) {
 
   waiting_for_response = command;
   last_send_ = millis();
-  ESP_LOGV(TAG, "AutoMower write: %s", format_hex_pretty(data).c_str());
+  char buf[format_hex_pretty_size(255)];
+  ESP_LOGV(TAG, "AutoMower write: %s", format_hex_pretty_to(buf, data));
 }
 
 // Helper function for lambdas
@@ -268,7 +270,8 @@ void AutoMower::send_raw(const std::vector<uint8_t> &payload) {
   this->write_byte(ETX);
   this->flush();
   waiting_for_response = payload[0];
-  ESP_LOGV(TAG, "AutoMower write raw: %s", format_hex_pretty(payload).c_str());
+  char buf[format_hex_pretty_size(255)];
+  ESP_LOGV(TAG, "AutoMower write raw: %s", format_hex_pretty_to(buf, payload));
   last_send_ = millis();
 }
 
